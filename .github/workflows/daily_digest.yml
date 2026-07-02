@@ -6,8 +6,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write
   contents: read
+  models: read
+  id-token: write
 
 jobs:
   digest:
