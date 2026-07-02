@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import logging
 import re
+import time
 from dataclasses import dataclass
+from email.utils import parsedate_to_datetime
 
 import feedparser
 import httpx
@@ -22,6 +24,7 @@ class Article:
     source_name: str
     source_url: str
     category: str
+    published: str = ''
 
 
 @dataclass
@@ -74,6 +77,16 @@ def fetch_feed(url: str, max_articles: int) -> ParsedFeed:
         title = entry.get('title', '')
         link = entry.get('link', '')
         summary = _clean_summary(entry.get('summary', ''))
+
+        published = ''
+        if entry.get('published_parsed'):
+            published = time.strftime('%Y-%m-%d', entry.published_parsed)
+        elif entry.get('published'):
+            try:
+                published = parsedate_to_datetime(entry.published).strftime('%Y-%m-%d')
+            except Exception:
+                pass
+
         articles.append(
             Article(
                 title=title,
@@ -82,6 +95,7 @@ def fetch_feed(url: str, max_articles: int) -> ParsedFeed:
                 source_name=feed_title,
                 source_url=url,
                 category='',
+                published=published,
             )
         )
 

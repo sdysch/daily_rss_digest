@@ -16,6 +16,7 @@ Prioritise articles that:
 - Have practical relevance or actionable insights
 - Represent major news events
 - Offer unique technical depth
+- Are recent and timely; prefer newer articles when equally important
 
 Avoid:
 - Duplicate coverage of the same story (pick the best source)
@@ -60,6 +61,7 @@ def _build_ranking_prompt(articles: list[Article], digest_count: int) -> str:
         summary = a.summary if a.summary else '(no summary)'
         lines.append(f'{i}. [{a.category}] {a.title}')
         lines.append(f'   Source: {a.source_name}')
+        lines.append(f'   Date: {a.published or "unknown"}')
         lines.append(f'   Summary: {summary}')
         lines.append('')
 
