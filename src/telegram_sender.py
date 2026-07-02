@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def send_digest(
     bot_token: str,
     chat_id: str,
-    articles: list[tuple[str, str, str]],
+    articles: list[tuple[str, str, str, str, str]],
     date_str: str,
 ) -> None:
     if not articles:
@@ -18,9 +18,10 @@ def send_digest(
         return
 
     lines = [f'<b>📰 Daily Digest — {date_str}</b>\n']
-    for i, (title, url, summary) in enumerate(articles, 1):
+    for i, (title, url, summary, source_name, source_url) in enumerate(articles, 1):
         lines.append(
-            f'{i}. <a href="{url}">{_escape(title)}</a>\n'
+            f'{i}. <a href="{_escape_attr(url)}">{_escape(title)}</a>\n'
+            f'   via <a href="{_escape_attr(source_url)}">{_escape(source_name)}</a>\n'
             f'   <i>{_escape(summary)}</i>\n'
         )
 
@@ -46,3 +47,7 @@ def send_digest(
 
 def _escape(text: str) -> str:
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+
+def _escape_attr(text: str) -> str:
+    return text.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;')

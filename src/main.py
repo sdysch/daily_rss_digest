@@ -103,7 +103,7 @@ def main(argv: list[str] | None = None) -> int:
 
     today = date.today().strftime('%B %d, %Y')
     digest_items = [
-        (a.title, a.url, s)
+        (a.title, a.url, s, a.source_name, a.source_url)
         for a, s in zip(ranked, summaries, strict=False)
     ]
 
@@ -113,9 +113,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.dry_run:
         print(f'\n=== 📰 Daily Digest — {today} ===\n')
-        for i, (title, url, summary) in enumerate(digest_items, 1):
+        for i, (title, url, summary, source_name, _) in enumerate(digest_items, 1):
             print(f'{i}. {title}')
             print(f'   {url}')
+            print(f'   via {source_name}')
             print(f'   {summary}')
             print()
         return 0
