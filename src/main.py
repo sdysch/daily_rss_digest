@@ -79,6 +79,11 @@ def main(argv: list[str] | None = None) -> int:
         logger.warning('No articles collected. Nothing to do.')
         return 0
 
+    MAX_RANKING_INPUT = 50
+    if len(articles) > MAX_RANKING_INPUT:
+        logger.info('Truncating %d articles to %d for LLM prompt size limit', len(articles), MAX_RANKING_INPUT)
+        articles = articles[:MAX_RANKING_INPUT]
+
     logger.info('Ranking %d articles with LLM...', len(articles))
     ranked = rank_articles(
         articles,
